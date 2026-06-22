@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: nubank-clone-simplificado
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: 8080
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:change-me-change-me-change-me-change-me}
+    expiration-minutes: ${JWT_EXPIRATION_MINUTES:60}
