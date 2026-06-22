@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Objects;
 
 @Service
 public class AccountService {
@@ -36,12 +37,22 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public Account getByEmail(String email) {
-        accountCacheService.getCachedBalance(email).ifPresent(balance -> {});
         return accountRepository.findByOwner_Email(email).orElseThrow();
+    }
+
+    @Transactional(readOnly = true)
+    public BigDecimal getBalance(String email) {
+        return accountCacheService.getCachedBalance(email)
+                .orElseGet(() -> {
+                    Account account = getByEmail(email);
+                    accountCacheService.cacheSummary(email, account);
+                    return account.getBalance();
+                });
     }
 
     @Transactional
     public Account deposit(String email, BigDecimal amount, String description) {
+        validatePositiveAmount(amount);
         Account account = getByEmail(email);
         account.deposit(amount);
         statementRepository.save(new StatementEntry(account, TransactionType.DEPOSIT, amount, description, Instant.now()));
@@ -52,6 +63,10 @@ public class AccountService {
 
     @Transactional
     public void transfer(String fromEmail, String toEmail, BigDecimal amount, String description, TransactionType type) {
+        validatePositiveAmount(amount);
+        if (Objects.equals(fromEmail, toEmail)) {
+            throw new IllegalArgumentException("Destination account must be different from origin account");
+        }
         Account from = getByEmail(fromEmail);
         Account to = getByEmail(toEmail);
         if (from.getBalance().compareTo(amount) < 0) {
@@ -65,5 +80,11 @@ public class AccountService {
         accountRepository.save(to);
         accountCacheService.evict(fromEmail);
         accountCacheService.evict(toEmail);
+    }
+
+    private void validatePositiveAmount(BigDecimal amount) {
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Amount must be greater than zero");
+        }
     }
 }

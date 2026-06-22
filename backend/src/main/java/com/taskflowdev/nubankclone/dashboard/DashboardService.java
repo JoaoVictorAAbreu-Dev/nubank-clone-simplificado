@@ -1,6 +1,5 @@
 package com.taskflowdev.nubankclone.dashboard;
 
-import com.taskflowdev.nubankclone.account.Account;
 import com.taskflowdev.nubankclone.account.AccountService;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +14,7 @@ public class DashboardService {
     }
 
     public BigDecimal getBalance(String email) {
-        Account account = accountService.createAccount(email);
-        return account.getBalance();
+        accountService.createAccount(email);
+        return accountService.getBalance(email);
     }
 }
