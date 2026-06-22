@@ -3,6 +3,8 @@ package com.taskflowdev.nubankclone.auth;
 import com.taskflowdev.nubankclone.auth.dto.AuthResponse;
 import com.taskflowdev.nubankclone.auth.dto.LoginRequest;
 import com.taskflowdev.nubankclone.auth.dto.RegisterRequest;
+import com.taskflowdev.nubankclone.account.Account;
+import com.taskflowdev.nubankclone.account.AccountRepository;
 import com.taskflowdev.nubankclone.security.JwtService;
 import com.taskflowdev.nubankclone.user.UserAccount;
 import com.taskflowdev.nubankclone.user.UserRepository;
@@ -12,11 +14,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
     private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
+    public AuthService(UserRepository userRepository, AccountRepository accountRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
+        this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
     }
@@ -27,6 +31,7 @@ public class AuthService {
         }
         UserAccount user = new UserAccount(request.email(), passwordEncoder.encode(request.password()));
         userRepository.save(user);
+        accountRepository.save(new Account(user));
         return new AuthResponse(jwtService.generateToken(user.getEmail()));
     }
 
