@@ -1,5 +1,11 @@
 # Nubank Clone Simplificado
 
+![Java](https://img.shields.io/badge/Java-21-red)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.x-brightgreen)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
+![Redis](https://img.shields.io/badge/Redis-7.0-red)
+![React](https://img.shields.io/badge/React-TypeScript-61DAFB)
+
 Aplicação fullstack de demonstração financeira inspirada em fluxos bancários modernos. O objetivo é evidenciar regras de negócio, controle transacional, autenticação com JWT, persistência em PostgreSQL, uso pragmático de Redis e uma interface leve em React.
 
 ## Visão Geral
@@ -115,6 +121,10 @@ Executar build do frontend:
 cd frontend
 npm run build
 ```
+
+## Capturas de Execução
+
+![Tela inicial do Nubank Clone Simplificado](C:/Users/jv921/Documents/Codex/2026-06-21/que/outputs/projeto2-home.png)
 
 ## Decisões de Projeto
 
