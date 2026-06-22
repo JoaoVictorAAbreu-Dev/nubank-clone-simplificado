@@ -1,6 +1,7 @@
 package com.taskflowdev.nubankclone.statement;
 
 import com.taskflowdev.nubankclone.account.AccountService;
+import com.taskflowdev.nubankclone.statement.dto.StatementResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +21,16 @@ public class StatementController {
     }
 
     @GetMapping
-    public List<StatementEntry> list(Authentication authentication) {
+    public List<StatementResponse> list(Authentication authentication) {
         accountService.createAccount(authentication.getName());
-        return statementRepository.findAll();
+        return statementRepository.findAll().stream()
+                .map(entry -> new StatementResponse(
+                        entry.getId(),
+                        entry.getAccount().getOwner().getEmail(),
+                        entry.getType(),
+                        entry.getAmount(),
+                        entry.getDescription(),
+                        entry.getCreatedAt()))
+                .toList();
     }
 }

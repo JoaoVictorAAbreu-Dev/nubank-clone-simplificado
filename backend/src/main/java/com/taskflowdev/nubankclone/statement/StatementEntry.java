@@ -41,4 +41,33 @@ public class StatementEntry {
         this.description = description;
         this.createdAt = createdAt;
     }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public TransactionType getType() {
+        return type;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return type + " " + amount + " - " + description;
+    }
 }

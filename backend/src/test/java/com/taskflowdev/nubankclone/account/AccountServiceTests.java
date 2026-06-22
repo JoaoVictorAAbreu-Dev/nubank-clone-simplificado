@@ -1,6 +1,7 @@
 package com.taskflowdev.nubankclone.account;
 
 import com.taskflowdev.nubankclone.statement.StatementRepository;
+import com.taskflowdev.nubankclone.cache.AccountCacheService;
 import com.taskflowdev.nubankclone.user.UserAccount;
 import com.taskflowdev.nubankclone.user.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,9 @@ class AccountServiceTests {
 
     @MockBean
     private StatementRepository statementRepository;
+
+    @MockBean
+    private AccountCacheService accountCacheService;
 
     @Test
     void depositUpdatesBalance() {

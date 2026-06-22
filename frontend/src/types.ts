@@ -15,3 +15,7 @@ export type StatementEntry = {
   description: string;
   createdAt: string;
 };
+
+export type DashboardSummary = {
+  balance: number;
+};

@@ -29,4 +29,52 @@ export const api = {
       body: JSON.stringify({ email, password }),
     });
   },
+  dashboard(token: string) {
+    return request<{ balance: number }>('/api/dashboard', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
+  account(token: string) {
+    return request<{ id: string; ownerEmail: string; balance: number }>('/api/accounts/me', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
+  deposit(token: string, amount: number, description: string) {
+    return request<{ id: string; ownerEmail: string; balance: number }>('/api/accounts/deposit', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ amount, description }),
+    });
+  },
+  transfer(token: string, toEmail: string, amount: number, description: string) {
+    return request<void>('/api/accounts/transfer', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ toEmail, amount, description }),
+    });
+  },
+  pix(token: string, toEmail: string, amount: number, description: string) {
+    return request<void>('/api/accounts/pix', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ toEmail, amount, description }),
+    });
+  },
+  statements(token: string) {
+    return request<Array<{ id: string; accountEmail: string; type: string; amount: number; description: string; createdAt: string }>>('/api/statements', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
 };

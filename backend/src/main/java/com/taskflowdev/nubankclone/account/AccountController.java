@@ -2,6 +2,7 @@ package com.taskflowdev.nubankclone.account;
 
 import com.taskflowdev.nubankclone.account.dto.AccountResponse;
 import com.taskflowdev.nubankclone.account.dto.DepositRequest;
+import com.taskflowdev.nubankclone.account.dto.PixRequest;
 import com.taskflowdev.nubankclone.account.dto.TransferRequest;
 import com.taskflowdev.nubankclone.transaction.TransactionType;
 import jakarta.validation.Valid;
@@ -20,20 +21,25 @@ public class AccountController {
 
     @GetMapping("/me")
     public AccountResponse me(Authentication authentication) {
-        Account account = accountService.createAccount(authentication.getName());
-        return new AccountResponse(account.getId(), account.getOwner().getEmail(), account.getBalance());
+        return AccountMapper.toResponse(accountService.createAccount(authentication.getName()));
     }
 
     @PostMapping("/deposit")
     @ResponseStatus(HttpStatus.OK)
     public AccountResponse deposit(Authentication authentication, @Valid @RequestBody DepositRequest request) {
         Account account = accountService.deposit(authentication.getName(), request.amount(), request.description());
-        return new AccountResponse(account.getId(), account.getOwner().getEmail(), account.getBalance());
+        return AccountMapper.toResponse(account);
     }
 
     @PostMapping("/transfer")
     @ResponseStatus(HttpStatus.OK)
     public void transfer(Authentication authentication, @Valid @RequestBody TransferRequest request) {
         accountService.transfer(authentication.getName(), request.toEmail(), request.amount(), request.description(), TransactionType.TRANSFER);
+    }
+
+    @PostMapping("/pix")
+    @ResponseStatus(HttpStatus.OK)
+    public void pix(Authentication authentication, @Valid @RequestBody PixRequest request) {
+        accountService.transfer(authentication.getName(), request.toEmail(), request.amount(), request.description(), TransactionType.PIX);
     }
 }
